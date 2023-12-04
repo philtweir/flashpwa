@@ -11,7 +11,7 @@ export default defineConfig({
     VitePWA({ registerType: 'autoUpdate' }),
     legacy()
   ],
-  base: "./",
+  base: "/flashpwa/",
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
