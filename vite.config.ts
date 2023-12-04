@@ -13,7 +13,7 @@ export default defineConfig({
       manifest: {
         icons: [
           {
-            src: "/icon.png",
+            src: "/flashpwa/icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable"
@@ -21,7 +21,7 @@ export default defineConfig({
         ],
         screenshots: [
           {
-            src: "/screenshot.png",
+            src: "/flashpwa/screenshot.png",
             form_factor: "narrow",
             sizes: "364x765",
             "type": "image/png",
