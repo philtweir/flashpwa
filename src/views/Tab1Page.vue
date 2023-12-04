@@ -48,7 +48,7 @@ const incrementCounter = () => {
 
 const n = ref(Math.floor(Math.random() * 1000))
 const getData = () => {
-  fetch(`flashpwa/samples/form-${n.value}.json`).
+  fetch(`flashpwa/samples/forms-${n.value}.json`).
     then(res => res.json()).
     then((response) => {
       json.value = response;
