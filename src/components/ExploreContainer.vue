@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import {
   IonCard,
   IonCardTitle,
@@ -26,11 +26,13 @@ import {
 
 const isContentShown = ref(false);
 
-defineProps({
+const props = defineProps({
   name: String,
   conjugate: String,
   answer: String,
 });
+
+watch(() => props.name, () => { isContentShown.value = false });
 
 const toggleContent = () => {
   isContentShown.value = !isContentShown.value;
