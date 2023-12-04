@@ -8,7 +8,29 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     vue(),
-    VitePWA({ registerType: 'autoUpdate' }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        icons: [
+          {
+            src: "/icon.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable"
+          }
+        ],
+        screenshots: [
+          {
+            src: "/screenshot.png",
+            form_factor: "narrow",
+            sizes: "364x765",
+            "type": "image/png",
+            label: "verb card"
+          }
+        ]
+
+      }
+    }),
     legacy()
   ],
   base: "/flashpwa/",
