@@ -19,6 +19,9 @@
 import { ref } from 'vue'
 import {
   IonCard,
+  IonCardTitle,
+  IonCardHeader,
+  IonCardContent,
 } from '@ionic/vue';
 
 const isContentShown = ref(false);
