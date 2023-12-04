@@ -45,4 +45,15 @@ const incrementCounter = () => {
     counter.value = 0;
   }
 };
+
+const n = ref(Math.floor(Math.random() * 1000))
+const getData = () => {
+  fetch(`samples/form-${n.value}.json`).
+    then(res => res.json()).
+    then((response) => {
+      json.value = response;
+    });
+};
+
+getData();
 </script>
