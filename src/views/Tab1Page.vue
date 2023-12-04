@@ -24,6 +24,28 @@ import { ref } from 'vue';
 import { IonButton, IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import ExploreContainer from '@/components/ExploreContainer.vue';
 
+const langMapping = {
+  "Cond": "MCo.",
+  "Auto": "Saorb.",
+  "Interrog": "Cei.",
+  "Declar": "Tás.",
+  "Pos": "Dear.",
+  "Neg": "Diul.",
+  "PastCont": "Gnáthch.",
+  "Fut": "AFh.",
+  "Past": "ACh.",
+  "Pres": "AL.",
+  "Sg1": "1ph. UUa.",
+  "Sg2": "2ph. UUa.",
+  "Sg3Fem": "3ph. UUa. Bai.",
+  "Sg3Masc": "3ph. UUa. Fir.",
+  "Pl1": "1ph. UIo.",
+  "Pl2": "2ph. UIo.",
+  "Pl3": "3ph. UIo.",
+  "verbal noun": "AinmBr",
+  "verbal adjective": "AidBr",
+};
+
 const json = ref([
   {
     "name": "Creid",
@@ -51,7 +73,18 @@ const getData = () => {
   fetch(`flashpwa/samples/forms-${n.value}.json`).
     then(res => res.json()).
     then((response) => {
-      json.value = response;
+      const translated = response.map(entry => {
+        entry["conjugate"] = langMapping[entry["conjugate"]] || entry["conjugate"];
+        const conjugate = entry["conjugate"].split(" ").map(
+          term => langMapping[term] || term
+        ).join(" ");
+        console.log(conjugate);
+        return {
+          ...entry,
+          conjugate
+        };
+      });
+      json.value = translated;
     });
 };
 
