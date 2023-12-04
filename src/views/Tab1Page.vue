@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 1</ion-title>
+        <ion-title>GRMMA le BuNaMo 7 Gramadán</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
