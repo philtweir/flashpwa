@@ -96,12 +96,33 @@ const displayPhrase = computed(() => {
   let phrase = unchangedData._coded;
   
   // Replace placeholders with colored versions
+  // Handle both regular placeholders and -R suffix variants
+  const processedKeys = new Set();
+  
+  // First pass: Replace -R suffixed placeholders (e.g., ${I0R})
   Object.keys(unchangedData).forEach(key => {
     if (key !== '_root' && key !== '_coded' && unchangedData[key] && Array.isArray(unchangedData[key])) {
-      const placeholder = `\${${key}}`;
-      const color = getTagColor(key);
-      const replacement = `<span style="color: ${color}; font-weight: bold;">${unchangedData[key][1]}</span>`;
-      phrase = phrase.replace(placeholder, replacement);
+      const placeholderR = `\${${key}R}`;
+      if (phrase.includes(placeholderR)) {
+        const color = getTagColor(key);
+        // Use index [2] for -R suffix (if available, otherwise fallback to [1])
+        const value = unchangedData[key][2] || unchangedData[key][1];
+        const replacement = `<span style="color: ${color}; font-weight: bold;">${value}</span>`;
+        phrase = phrase.replace(new RegExp(placeholderR.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), replacement);
+        processedKeys.add(key);
+      }
+    }
+  });
+  
+  // Second pass: Replace regular placeholders (e.g., ${I0})
+  Object.keys(unchangedData).forEach(key => {
+    if (key !== '_root' && key !== '_coded' && unchangedData[key] && Array.isArray(unchangedData[key])) {
+      if (!processedKeys.has(key)) {
+        const placeholder = `\${${key}}`;
+        const color = getTagColor(key);
+        const replacement = `<span style="color: ${color}; font-weight: bold;">${unchangedData[key][1]}</span>`;
+        phrase = phrase.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), replacement);
+      }
     }
   });
   
@@ -114,16 +135,17 @@ const templatePhrase = computed(() => {
   const subitemData = props.selectedSubitem[1];
   const shapes: string[] = [];
   
-  // Extract tags in order from the _coded phrase
+  // Extract tags in order from the _coded phrase, including -R suffix
   const codedPhrase = subitemData._coded;
-  const tagPattern = /\$\{([DI]\d+)\}/g;
+  const tagPattern = /\$\{([DI]\d+R?)\}/g;
   let match;
   
   while ((match = tagPattern.exec(codedPhrase)) !== null) {
-    const tag = match[1];
-    const color = getTagColor(tag);
+    const fullTag = match[1];
+    const baseTag = fullTag.replace(/R$/, ''); // Remove R suffix to get base tag for color
+    const color = getTagColor(baseTag);
     // Use different shapes for D (direct) and I (indirect) tags
-    const shape = tag.startsWith('D') ? 'circle' : 'square';
+    const shape = baseTag.startsWith('D') ? 'circle' : 'square';
     shapes.push(`<span class="shape ${shape}" style="background-color: ${color};"></span>`);
   }
   
@@ -138,12 +160,31 @@ const answerPhrase = computed(() => {
   let phrase = subitemData._coded;
   
   // Replace placeholders with colored versions
+  // Handle both regular placeholders and -R suffix variants
+  const processedKeys = new Set();
+  
+  // First pass: Replace -R suffixed placeholders (e.g., ${I0R})
+  Object.keys(subitemData).forEach(key => {
+    if (key !== '_root' && key !== '_coded' && subitemData[key] && Array.isArray(subitemData[key])) {
+      const placeholderR = `\${${key}R}`;
+      if (phrase.includes(placeholderR)) {
+        const color = getTagColor(key);
+        // Use index [2] for -R suffix (if available, otherwise fallback to [1])
+        const value = subitemData[key][2] || subitemData[key][1];
+        const replacement = `<span style="color: ${color}; font-weight: bold;">${value}</span>`;
+        phrase = phrase.replace(new RegExp(placeholderR.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), replacement);
+        processedKeys.add(key);
+      }
+    }
+  });
+  
+  // Second pass: Replace regular placeholders (e.g., ${I0})
   Object.keys(subitemData).forEach(key => {
     if (key !== '_root' && key !== '_coded' && subitemData[key] && Array.isArray(subitemData[key])) {
       const placeholder = `\${${key}}`;
       const color = getTagColor(key);
       const replacement = `<span style="color: ${color}; font-weight: bold;">${subitemData[key][1]}</span>`;
-      phrase = phrase.replace(placeholder, replacement);
+      phrase = phrase.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), replacement);
     }
   });
   
