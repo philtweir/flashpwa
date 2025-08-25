@@ -3,6 +3,9 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>GRMMA le BuNaMo 7 Gramadán</ion-title>
+        <ion-buttons slot="end">
+          <InstallButton />
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
@@ -21,8 +24,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonButton, IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonButton, IonButtons, IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import ExploreContainer from '@/components/ExploreContainer.vue';
+import InstallButton from '@/components/InstallButton.vue';
 
 const langMapping: Map<string, string> = new Map([
   ["Cond", "MCo."],

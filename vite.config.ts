@@ -11,12 +11,25 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
+        name: 'GRMMA le BuNaMo 7 Gramadán',
+        short_name: 'FlashPWA',
+        description: 'Irish language learning flashcard app for grammar practice',
+        theme_color: '#3880ff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '/flashpwa/',
+        scope: '/flashpwa/',
         icons: [
           {
             src: "/flashpwa/icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable"
+          },
+          {
+            src: "/flashpwa/favicon.png", 
+            sizes: "192x192",
+            type: "image/png"
           }
         ],
         screenshots: [
@@ -28,7 +41,9 @@ export default defineConfig({
             label: "verb card"
           }
         ]
-
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}']
       }
     }),
     legacy()
