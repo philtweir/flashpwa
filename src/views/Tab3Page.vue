@@ -54,7 +54,7 @@ const loadNext = () => {
 
 onMounted(async () => {
   try {
-    const response = await fetch('/flashpwa/python/examples.json');
+    const response = await fetch('/flashpwa/examples.json');
     examplesData.value = await response.json();
     loadNext();
   } catch (error) {

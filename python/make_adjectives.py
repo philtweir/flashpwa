@@ -185,15 +185,43 @@ class AdjectiveGenerator:
         base_noun_form = noun.to(Case.Nom, number, Article.NoArt)[0].value
         base_adj_form = adjective.to(Case.Nom, number, Article.NoArt)[0].value
         
-        # Extract mutated noun and adjective forms
-        print(noun, Case.Gen, number, Article.NoArt)
-        mut_noun_form = noun.to(Case.Gen, number, Article.NoArt)[0].value
-        print(adjective, Case.Gen, number, Article.NoArt)
-        mut_adj_form = adjective.to(Case.Gen, number, Article.NoArt)[0].value
+        # Extract mutated components from the complete mutated phrase
+        # Remove any article prefix from mutated form for analysis
+        mutated_clean = mutated_form
+        if with_article:
+            article_prefix = "na " if is_plural else "an "
+            if mutated_clean.startswith(article_prefix):
+                mutated_clean = mutated_clean[len(article_prefix):]
         
-        # Analyze mutations
-        noun_mut_front, noun_mut_mid, noun_mut_back = self.analyze_mutation(base_noun_form, mut_noun_form)
-        adj_mut_front, adj_mut_mid, adj_mut_back = self.analyze_mutation(base_adj_form, mut_adj_form)
+        # Remove preposition prefix if present
+        if prep_prefix:
+            prep_parts = prep_prefix.split()
+            for part in prep_parts:
+                if mutated_clean.startswith(part + " "):
+                    mutated_clean = mutated_clean[len(part + " "):]
+        
+        # Split the mutated phrase into noun and adjective parts
+        # This is a heuristic - we assume the noun comes first, then adjective
+        mutated_parts = mutated_clean.strip().split()
+        
+        if len(mutated_parts) >= 2:
+            # Try to identify which part is the noun and which is the adjective
+            # Generally, the first part is the noun, the rest form the adjective
+            mut_noun_candidate = mutated_parts[0]
+            mut_adj_candidate = " ".join(mutated_parts[1:])
+        elif len(mutated_parts) == 1:
+            # Only one word - could be noun only or compound
+            # Use base forms as fallback
+            mut_noun_candidate = mutated_parts[0]
+            mut_adj_candidate = base_adj_form
+        else:
+            # Fallback to base forms if parsing fails
+            mut_noun_candidate = base_noun_form
+            mut_adj_candidate = base_adj_form
+        
+        # Analyze mutations based on the extracted parts
+        noun_mut_front, noun_mut_mid, noun_mut_back = self.analyze_mutation(base_noun_form, mut_noun_candidate)
+        adj_mut_front, adj_mut_mid, adj_mut_back = self.analyze_mutation(base_adj_form, mut_adj_candidate)
         
         return AdjectiveExample(
             name=adjective_key,
