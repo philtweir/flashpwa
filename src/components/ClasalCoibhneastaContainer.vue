@@ -89,7 +89,7 @@ const displayPhrase = computed(() => {
   if (!props.data) return '';
   
   // Find the "Unchanged" item
-  const unchangedItem = props.data.find(item => item[0] === 'Unchanged');
+  const unchangedItem = props.data.find((item: any) => item[0] === 'Unchanged');
   if (!unchangedItem) return '';
   
   const unchangedData = unchangedItem[1];

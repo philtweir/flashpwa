@@ -38,6 +38,7 @@ import {
 const isContentShown = ref(false);
 
 const props = defineProps({
+  name: String,
   prefix: String,
   article: String,
   articleMut: String,

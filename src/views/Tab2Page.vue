@@ -16,8 +16,6 @@
 
       <AdjectiveContainer
           :name="json[counter].name"
-          :conjugate="json[counter].conjugate"
-          :answer="json[counter].answer"
           :prefix="json[counter].prefix"
           :article="json[counter].article"
           :articleMut="json[counter].articleMut"
@@ -41,6 +39,7 @@ import AdjectiveContainer from '@/components/AdjectiveContainer.vue';
 
 const json = ref([
   {
+    "name": "mór",
     "prefix": "i ndiaidh",
     "article": "na",
     "articleMut": "na",
