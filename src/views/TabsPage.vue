@@ -7,6 +7,10 @@
           <ion-icon aria-hidden="true" :icon="triangle" />
           <ion-label>luaschártaí</ion-label>
         </ion-tab-button>
+        <ion-tab-button tab="tab2" href="/tabs/tab2">
+          <ion-icon aria-hidden="true" :icon="square" />
+          <ion-label>aidiochtai</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -14,5 +18,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { triangle } from 'ionicons/icons';
+import { triangle, square } from 'ionicons/icons';
 </script>
