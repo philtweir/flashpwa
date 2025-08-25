@@ -1,0 +1,72 @@
+[
+  {
+    "name": "mígheanasach",
+    "prefix": "os comhair",
+    "article": "an",
+    "articleMut": "an",
+    "noun": "daba",
+    "nounMutFront": "daba",
+    "nounMutMid": "",
+    "nounMutBack": "aba",
+    "adjective": "mígheanasach",
+    "adjMutFront": "m",
+    "adjMutMid": "hígheanasaigh",
+    "adjMutBack": ""
+  },
+  {
+    "name": "urghnách",
+    "prefix": "i gcóir",
+    "article": "an",
+    "articleMut": "an",
+    "noun": "loingeas",
+    "nounMutFront": "l",
+    "nounMutMid": "oingis",
+    "nounMutBack": "",
+    "adjective": "urghnách",
+    "adjMutFront": "urghnách",
+    "adjMutMid": "",
+    "adjMutBack": "rghnách"
+  },
+  {
+    "name": "inbhuailte",
+    "prefix": "i ndiaidh",
+    "article": "an",
+    "articleMut": "an",
+    "noun": "dingín",
+    "nounMutFront": "dingín",
+    "nounMutMid": "",
+    "nounMutBack": "ingín",
+    "adjective": "inbhuailte",
+    "adjMutFront": "inbhuailte",
+    "adjMutMid": "",
+    "adjMutBack": "nbhuailte"
+  },
+  {
+    "name": "treallach",
+    "prefix": "i gcóir",
+    "article": "",
+    "articleMut": "",
+    "noun": "foscripteanna",
+    "nounMutFront": "foscripteanna",
+    "nounMutMid": "",
+    "nounMutBack": "oscripteanna",
+    "adjective": "treallacha",
+    "adjMutFront": "treallacha",
+    "adjMutMid": "",
+    "adjMutBack": "reallacha"
+  },
+  {
+    "name": "foircneach",
+    "prefix": "in aice",
+    "article": "",
+    "articleMut": "",
+    "noun": "sméideoga",
+    "nounMutFront": "sméideog",
+    "nounMutMid": "",
+    "nounMutBack": "",
+    "adjective": "foircneacha",
+    "adjMutFront": "foircneach",
+    "adjMutMid": "",
+    "adjMutBack": ""
+  }
+]

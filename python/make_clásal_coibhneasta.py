@@ -195,6 +195,7 @@ class RelativeClauseGenerator:
                 else:
                     gender_suffix = "Masc" if gender == Gender.Masc else "Fem"
                     noun_choice = prep.forms[f"sg3{gender_suffix}"][0].value
+                print(plural, noun_choice, base)
 
             # Replace placeholder with colored noun
             colored = f"{Fore.YELLOW}{noun_choice}{Style.RESET_ALL}"
@@ -229,7 +230,9 @@ class RelativeClauseGenerator:
 
         for (symbol, noun), definite, plural in zip(nouns, definite_choices, plural_choices):
             # Create noun phrase
-            number = Number.Pl if (plural and noun.plNom) else Number.Sg
+            if not noun.plNom:
+                plural = False
+            number = Number.Pl if plural else Number.Sg
             noun_phrase = NP.create_from_noun(noun)
 
             prep = None

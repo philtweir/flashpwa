@@ -10,7 +10,7 @@ import sys
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional, Tuple, Literal
 from random import choice, randint
 
 # Gramadán imports for Irish language processing
@@ -22,7 +22,7 @@ from gramadan.v2.features import Case, Article, System
 from gramadan.v2.database import Database
 
 # Configuration
-SAMPLES = 100  # Number of examples to generate
+SAMPLES = 5  # Number of examples to generate (reduced for testing)
 EXAMPLES_INPUT_FILE = "examples.txt"
 ADJECTIVES_OUTPUT_FILE = "adjectives.json"
 
@@ -134,7 +134,7 @@ class AdjectiveGenerator:
     def generate_example(self, noun_key: str, adjective_key: str, 
                         prefix: Optional[str] = None, 
                         with_article: bool = True,
-                        is_plural: bool = False) -> AdjectiveExample:
+                        is_plural: bool = False) -> AdjectiveExample | Literal[False]:
         """
         Generate a single adjective mutation example.
         
@@ -157,7 +157,6 @@ class AdjectiveGenerator:
         
         # Base forms (nominative)
         noun_phrase = noun + adjective
-        base_form = noun_phrase.to(Case.Nom, number, article_type)[0].value
         
         # Get constituent parts
         article_base = ""
@@ -168,37 +167,39 @@ class AdjectiveGenerator:
             else:
                 article_base = article_mut = "an"
         
-        # Handle preposition
+        # Handle preposition and get the proper mutated form
         prep_prefix = ""
         if prefix and prefix in self.dictionaries["preposition"]:
             prep = self.dictionaries["preposition"][prefix]
             prep_phrase = prep + noun_phrase
             mutated_form = prep_phrase.to(number, article_type)[0].value
             prep_prefix = prefix
+            # Also get the noun phrase without preposition for mutation analysis
+            attempt_mutation = noun_phrase.to(Case.Gen, number, article_type)
+            if not attempt_mutation:
+                return False
+            noun_phrase_mutated = attempt_mutation[0].value
         else:
             if prefix:
                 prep_prefix = prefix
             # Use genitive for mutation example
-            mutated_form = noun_phrase.to(Case.Gen, number, article_type)[0].value
+            attempt_mutation = noun_phrase.to(Case.Gen, number, article_type)
+            if not attempt_mutation:
+                return False
+            mutated_form = attempt_mutation[0].value
+            noun_phrase_mutated = mutated_form
         
         # Extract base noun and adjective forms
         base_noun_form = noun.to(Case.Nom, number, Article.NoArt)[0].value
         base_adj_form = adjective.to(Case.Nom, number, Article.NoArt)[0].value
         
-        # Extract mutated components from the complete mutated phrase
+        # Extract mutated components from the noun phrase (without preposition)
         # Remove any article prefix from mutated form for analysis
-        mutated_clean = mutated_form
+        mutated_clean = noun_phrase_mutated
         if with_article:
             article_prefix = "na " if is_plural else "an "
             if mutated_clean.startswith(article_prefix):
                 mutated_clean = mutated_clean[len(article_prefix):]
-        
-        # Remove preposition prefix if present
-        if prep_prefix:
-            prep_parts = prep_prefix.split()
-            for part in prep_parts:
-                if mutated_clean.startswith(part + " "):
-                    mutated_clean = mutated_clean[len(part + " "):]
         
         # Split the mutated phrase into noun and adjective parts
         # This is a heuristic - we assume the noun comes first, then adjective
@@ -218,6 +219,15 @@ class AdjectiveGenerator:
             # Fallback to base forms if parsing fails
             mut_noun_candidate = base_noun_form
             mut_adj_candidate = base_adj_form
+        
+        # Debug output to verify extraction
+        if __debug__:
+            print(f"Debug: Base noun='{base_noun_form}', adj='{base_adj_form}'")
+            print(f"Debug: Full mutated='{mutated_form}'")
+            print(f"Debug: Noun phrase mutated='{noun_phrase_mutated}'")
+            print(f"Debug: Clean mutated='{mutated_clean}'")
+            print(f"Debug: Extracted noun='{mut_noun_candidate}', adj='{mut_adj_candidate}'")
+            print()
         
         # Analyze mutations based on the extracted parts
         noun_mut_front, noun_mut_mid, noun_mut_back = self.analyze_mutation(base_noun_form, mut_noun_candidate)
@@ -261,7 +271,7 @@ class AdjectiveGenerator:
             None,         # no prefix (genitive case)
         ]
         
-        for i in range(count):
+        while len(examples) < count:
             # Select random components
             noun_key = choice(self.nouns)
             adj_key = choice(self.adjectives)
@@ -269,10 +279,10 @@ class AdjectiveGenerator:
             with_article = choice([True, False])
             is_plural = choice([True, False])
             
-            example = self.generate_example(
+            if (example := self.generate_example(
                 noun_key, adj_key, prefix, with_article, is_plural
-            )
-            examples.append(example)
+            )):
+                examples.append(example)
         
         return examples
 
