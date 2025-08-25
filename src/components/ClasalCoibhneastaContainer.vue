@@ -5,6 +5,7 @@
         <ion-card-content>
           <p class="challenge-type">{{ challengeType }}</p>
           <div class="word-display">
+            <p class="verb-root">{{ verbRoot }}</p>
             <p v-for="word in displayWordsWithTags" :key="word.tag" :class="`tag-${word.tag}`">{{ word.text }}</p>
           </div>
           <p class="phrase" v-html="displayPhrase"></p>
@@ -58,6 +59,12 @@ const tagColors: Record<string, string> = {
 const getTagColor = (tag: string) => {
   return tagColors[tag] || '#95a5a6'; // default gray if tag not in palette
 };
+
+const verbRoot = computed(() => {
+  if (!props.selectedSubitem) return '';
+  const subitemData = props.selectedSubitem[1];
+  return subitemData._root || '';
+});
 
 const displayWordsWithTags = computed(() => {
   if (!props.selectedSubitem) return [];
@@ -178,10 +185,15 @@ const answerPhrase = computed(() => {
 }
 
 .word-display p {
-  display: inline-block;
-  margin: 0 10px;
-  font-size: 18px;
+  display: block;
+  margin: 5px 0;
+  font-size: 16px;
   font-weight: bold;
+}
+
+.verb-root {
+  color: #222;
+  font-style: italic;
 }
 
 /* Tag-specific colors */
